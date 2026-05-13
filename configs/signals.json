@@ -1,0 +1,331 @@
+{
+  "schema_version": "axdr_l.phase3.signals.v1",
+  "target_firmware": {
+    "name": "AxDr_L",
+    "repository": "https://github.com/HHHyuan111/AxDr_L",
+    "branch": "main",
+    "commit": "7c2241061ae5318d9a47d3404cec92412767b802",
+    "source_document": "docs/axdr_l_signal_mapping.md"
+  },
+  "signals": [
+    {
+      "name": "bus_voltage",
+      "source_in_axdr_l": "pm.foc.vbus",
+      "display_name": "Bus Voltage",
+      "type": "float",
+      "unit": "V",
+      "description": "DC bus voltage derived from ADC sample and board scaling.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "bus_current",
+      "source_in_axdr_l": "pm.foc.ibus",
+      "display_name": "Bus Current",
+      "type": "float",
+      "unit": "A",
+      "description": "Estimated DC bus current.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "phase_current_a",
+      "source_in_axdr_l": "pm.foc.i_a",
+      "display_name": "Phase Current A",
+      "type": "float",
+      "unit": "A",
+      "description": "Phase A current after offset compensation and scaling.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "phase_current_b",
+      "source_in_axdr_l": "pm.foc.i_b",
+      "display_name": "Phase Current B",
+      "type": "float",
+      "unit": "A",
+      "description": "Phase B current after offset compensation and scaling.",
+      "dashboard": false,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "phase_current_c",
+      "source_in_axdr_l": "pm.foc.i_c",
+      "display_name": "Phase Current C",
+      "type": "float",
+      "unit": "A",
+      "description": "Phase C current after offset compensation and scaling.",
+      "dashboard": false,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "current_d",
+      "source_in_axdr_l": "pm.foc.i_d",
+      "display_name": "D-Axis Current",
+      "type": "float",
+      "unit": "A",
+      "description": "Park d-axis current feedback.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "current_q",
+      "source_in_axdr_l": "pm.foc.i_q",
+      "display_name": "Q-Axis Current",
+      "type": "float",
+      "unit": "A",
+      "description": "Park q-axis current feedback.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "current_abs",
+      "source_in_axdr_l": "pm.foc.i_abs",
+      "display_name": "Current Magnitude",
+      "type": "float",
+      "unit": "A",
+      "description": "Current magnitude used for monitoring and protection.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "voltage_d",
+      "source_in_axdr_l": "pm.foc.v_d",
+      "display_name": "D-Axis Voltage",
+      "type": "float",
+      "unit": "V",
+      "description": "D-axis voltage command or output.",
+      "dashboard": false,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "voltage_q",
+      "source_in_axdr_l": "pm.foc.v_q",
+      "display_name": "Q-Axis Voltage",
+      "type": "float",
+      "unit": "V",
+      "description": "Q-axis voltage command or output.",
+      "dashboard": false,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "electrical_angle",
+      "source_in_axdr_l": "pm.foc.p_e",
+      "display_name": "Electrical Angle",
+      "type": "float",
+      "unit": "rad",
+      "description": "Electrical rotor angle used by FOC.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "encoder_angle",
+      "source_in_axdr_l": "pm.foc.e_pr",
+      "display_name": "Encoder Angle",
+      "type": "float",
+      "unit": "rad",
+      "description": "Primary encoder angle mapped to radians.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "mechanical_position_multi",
+      "source_in_axdr_l": "pm.foc.mp_m",
+      "display_name": "Mechanical Position",
+      "type": "float",
+      "unit": "rad",
+      "description": "Multi-turn mechanical position.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "rotor_speed_filtered",
+      "source_in_axdr_l": "pm.foc.wr_f",
+      "display_name": "Filtered Rotor Speed",
+      "type": "float",
+      "unit": "rad/s",
+      "description": "Low-pass filtered rotor speed.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "mechanical_speed",
+      "source_in_axdr_l": "pm.foc.wm",
+      "display_name": "Mechanical Speed",
+      "type": "float",
+      "unit": "rad/s",
+      "description": "Mechanical or output angular velocity.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "speed_target_mechanical",
+      "source_in_axdr_l": "pm.ctrl.wm_set",
+      "display_name": "Speed Target",
+      "type": "float",
+      "unit": "rad/s",
+      "description": "Mechanical speed target.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "current_target_d",
+      "source_in_axdr_l": "pm.ctrl.id_set",
+      "display_name": "D Current Target",
+      "type": "float",
+      "unit": "A",
+      "description": "D-axis current setpoint.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "current_target_q",
+      "source_in_axdr_l": "pm.ctrl.iq_set",
+      "display_name": "Q Current Target",
+      "type": "float",
+      "unit": "A",
+      "description": "Q-axis current setpoint.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "position_target_mechanical",
+      "source_in_axdr_l": "pm.ctrl.posm_set",
+      "display_name": "Position Target",
+      "type": "float",
+      "unit": "rad",
+      "description": "Mechanical position target.",
+      "dashboard": false,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "duty_a",
+      "source_in_axdr_l": "pm.foc.dtc_a",
+      "display_name": "PWM Duty A",
+      "type": "float",
+      "unit": "ratio",
+      "description": "SVPWM duty for phase A.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "duty_b",
+      "source_in_axdr_l": "pm.foc.dtc_b",
+      "display_name": "PWM Duty B",
+      "type": "float",
+      "unit": "ratio",
+      "description": "SVPWM duty for phase B.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "duty_c",
+      "source_in_axdr_l": "pm.foc.dtc_c",
+      "display_name": "PWM Duty C",
+      "type": "float",
+      "unit": "ratio",
+      "description": "SVPWM duty for phase C.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "mos_temperature",
+      "source_in_axdr_l": "pm.foc.Tmos",
+      "display_name": "MOS Temperature",
+      "type": "float",
+      "unit": "degC",
+      "description": "Power MOS temperature estimate.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "coil_temperature",
+      "source_in_axdr_l": "pm.foc.Tcoil",
+      "display_name": "Coil Temperature",
+      "type": "float",
+      "unit": "degC",
+      "description": "Motor coil or rotor temperature estimate.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    },
+    {
+      "name": "control_state",
+      "source_in_axdr_l": "pm.ctrl_bit",
+      "display_name": "Control State",
+      "type": "enum",
+      "unit": "state",
+      "description": "AxDr_L reset/start/opera control state.",
+      "dashboard": true,
+      "scope": false,
+      "logger": true
+    },
+    {
+      "name": "run_state",
+      "source_in_axdr_l": "pm.state_bit",
+      "display_name": "Run State",
+      "type": "enum",
+      "unit": "state",
+      "description": "AxDr_L stop/prech/runing/fault runtime state.",
+      "dashboard": true,
+      "scope": false,
+      "logger": true
+    },
+    {
+      "name": "system_mode",
+      "source_in_axdr_l": "pm.mode.sys",
+      "display_name": "System Mode",
+      "type": "enum",
+      "unit": "mode",
+      "description": "AxDr_L debug/release/calibration/halt system mode.",
+      "dashboard": true,
+      "scope": false,
+      "logger": true
+    },
+    {
+      "name": "release_mode",
+      "source_in_axdr_l": "pm.mode.release",
+      "display_name": "Release Mode",
+      "type": "enum",
+      "unit": "mode",
+      "description": "AxDr_L release mode selection.",
+      "dashboard": true,
+      "scope": false,
+      "logger": true
+    },
+    {
+      "name": "fault_word",
+      "source_in_axdr_l": "pm.fault.all",
+      "display_name": "Fault Word",
+      "type": "uint32",
+      "unit": "bitmask",
+      "description": "Aggregated PMSM fault bitmask.",
+      "dashboard": true,
+      "scope": true,
+      "logger": true
+    }
+  ]
+}

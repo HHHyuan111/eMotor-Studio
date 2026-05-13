@@ -1,0 +1,84 @@
+{
+  "schema_version": "axdr_l.phase3.faults.v1",
+  "target_firmware": {
+    "name": "AxDr_L",
+    "repository": "https://github.com/HHHyuan111/AxDr_L",
+    "branch": "main",
+    "commit": "7c2241061ae5318d9a47d3404cec92412767b802",
+    "source_document": "docs/axdr_l_analysis.md"
+  },
+  "faults": [
+    {
+      "code": "ov_curr",
+      "bit": 0,
+      "source_in_axdr_l": "pm.fault.bit.ov_curr",
+      "display_name": "Over Current",
+      "level": "critical",
+      "description": "Overcurrent fault bit."
+    },
+    {
+      "code": "un_volt",
+      "bit": 1,
+      "source_in_axdr_l": "pm.fault.bit.un_volt",
+      "display_name": "Under Voltage",
+      "level": "critical",
+      "description": "DC bus undervoltage fault bit."
+    },
+    {
+      "code": "ov_volt",
+      "bit": 2,
+      "source_in_axdr_l": "pm.fault.bit.ov_volt",
+      "display_name": "Over Voltage",
+      "level": "critical",
+      "description": "DC bus overvoltage fault bit."
+    },
+    {
+      "code": "ov_tmos",
+      "bit": 3,
+      "source_in_axdr_l": "pm.fault.bit.ov_tmos",
+      "display_name": "MOS Over Temperature",
+      "level": "critical",
+      "description": "Power MOS over-temperature fault bit."
+    },
+    {
+      "code": "ov_tcoi",
+      "bit": 4,
+      "source_in_axdr_l": "pm.fault.bit.ov_tcoi",
+      "display_name": "Coil Over Temperature",
+      "level": "critical",
+      "description": "Coil or rotor over-temperature fault bit."
+    },
+    {
+      "code": "enc_err",
+      "bit": 5,
+      "source_in_axdr_l": "pm.fault.bit.enc_err",
+      "display_name": "Encoder Error",
+      "level": "critical",
+      "description": "Encoder error fault bit."
+    },
+    {
+      "code": "ioff_err",
+      "bit": 6,
+      "source_in_axdr_l": "pm.fault.bit.ioff_err",
+      "display_name": "Current Offset Error",
+      "level": "warning",
+      "description": "Current offset calibration fault bit."
+    },
+    {
+      "code": "off_link",
+      "bit": 7,
+      "source_in_axdr_l": "pm.fault.bit.off_link",
+      "display_name": "Link Lost",
+      "level": "warning",
+      "description": "Host communication timeout fault bit."
+    },
+    {
+      "code": "ov_speed",
+      "bit": 8,
+      "source_in_axdr_l": "pm.fault.bit.ov_speed",
+      "display_name": "Over Speed",
+      "level": "critical",
+      "description": "Overspeed fault bit."
+    }
+  ]
+}

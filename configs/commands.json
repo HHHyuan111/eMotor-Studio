@@ -1,0 +1,196 @@
+{
+  "schema_version": "axdr_l.phase3.commands.v1",
+  "target_firmware": {
+    "name": "AxDr_L",
+    "repository": "https://github.com/HHHyuan111/AxDr_L",
+    "branch": "main",
+    "commit": "7c2241061ae5318d9a47d3404cec92412767b802",
+    "source_document": "docs/axdr_l_protocol_plan.md"
+  },
+  "commands": [
+    {
+      "id": 1,
+      "name": "ping",
+      "display_name": "Ping",
+      "direction": "host_to_device",
+      "description": "Protocol health check."
+    },
+    {
+      "id": 16,
+      "name": "motor_enable",
+      "display_name": "Motor Enable",
+      "direction": "host_to_device",
+      "description": "Request AxDr_L operate state after safety checks.",
+      "target_in_axdr_l": "pm.ctrl_bit = opera"
+    },
+    {
+      "id": 17,
+      "name": "motor_stop",
+      "display_name": "Motor Stop",
+      "direction": "host_to_device",
+      "description": "Request reset stop or halt mode.",
+      "target_in_axdr_l": "pm.ctrl_bit = reset"
+    },
+    {
+      "id": 18,
+      "name": "clear_fault",
+      "display_name": "Clear Fault",
+      "direction": "host_to_device",
+      "description": "Clear safe-to-clear fault bits and reset protection latch.",
+      "target_in_axdr_l": "pm.fault, pm.protect"
+    },
+    {
+      "id": 32,
+      "name": "set_system_mode",
+      "display_name": "Set System Mode",
+      "direction": "host_to_device",
+      "description": "Set debug/release/calibration/halt system mode.",
+      "target_in_axdr_l": "pm.mode.sys",
+      "payload": [
+        {
+          "name": "system_mode",
+          "type": "enum",
+          "values": ["debug_mode", "release_mode", "calibrat_mode", "halt_mode"]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "set_debug_mode",
+      "display_name": "Set Debug Mode",
+      "direction": "host_to_device",
+      "description": "Set AxDr_L debug control mode.",
+      "target_in_axdr_l": "pm.mode.debug",
+      "payload": [
+        {
+          "name": "debug_mode",
+          "type": "enum",
+          "values": ["drag_vf", "drag_if", "volt_op", "curr_cl", "spd_curr_cl", "pos_spd_curr_cl"]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "name": "set_release_mode",
+      "display_name": "Set Release Mode",
+      "direction": "host_to_device",
+      "description": "Set AxDr_L release control mode.",
+      "target_in_axdr_l": "pm.mode.release",
+      "payload": [
+        {
+          "name": "release_mode",
+          "type": "enum",
+          "values": ["mit_mode", "tor_mode", "vel_mode", "pos_mode", "cst_mode", "csv_mode", "csp_mode"]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "name": "set_calibration_mode",
+      "display_name": "Set Calibration Mode",
+      "direction": "host_to_device",
+      "description": "Set AxDr_L calibration or identification mode.",
+      "target_in_axdr_l": "pm.mode.calibrat",
+      "payload": [
+        {
+          "name": "calibration_mode",
+          "type": "enum",
+          "values": ["rotor_enc_cali", "iden_pm", "anticogging_pm"]
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "name": "set_current_target",
+      "display_name": "Set Current Target",
+      "direction": "host_to_device",
+      "description": "Set d/q current targets.",
+      "target_in_axdr_l": "pm.ctrl.id_set, pm.ctrl.iq_set",
+      "payload": [
+        {"name": "id_set", "type": "float", "unit": "A"},
+        {"name": "iq_set", "type": "float", "unit": "A"}
+      ]
+    },
+    {
+      "id": 49,
+      "name": "set_speed_target",
+      "display_name": "Set Speed Target",
+      "direction": "host_to_device",
+      "description": "Set mechanical speed target.",
+      "target_in_axdr_l": "pm.ctrl.wm_set",
+      "payload": [
+        {"name": "mechanical_speed", "type": "float", "unit": "rad/s"}
+      ]
+    },
+    {
+      "id": 50,
+      "name": "set_position_target",
+      "display_name": "Set Position Target",
+      "direction": "host_to_device",
+      "description": "Set mechanical position target.",
+      "target_in_axdr_l": "pm.ctrl.posm_set",
+      "payload": [
+        {"name": "mechanical_position", "type": "float", "unit": "rad"}
+      ]
+    },
+    {
+      "id": 51,
+      "name": "set_torque_target",
+      "display_name": "Set Torque Target",
+      "direction": "host_to_device",
+      "description": "Set mechanical torque target.",
+      "target_in_axdr_l": "pm.ctrl.torm_set",
+      "payload": [
+        {"name": "torque", "type": "float", "unit": "N*m"}
+      ]
+    },
+    {
+      "id": 64,
+      "name": "read_parameter",
+      "display_name": "Read Parameter",
+      "direction": "host_to_device",
+      "description": "Read one schema-defined parameter.",
+      "target_in_axdr_l": "parameter table"
+    },
+    {
+      "id": 65,
+      "name": "write_parameter",
+      "display_name": "Write Parameter",
+      "direction": "host_to_device",
+      "description": "Write one schema-defined parameter after validation.",
+      "target_in_axdr_l": "parameter table"
+    },
+    {
+      "id": 81,
+      "name": "start_telemetry_stream",
+      "display_name": "Start Telemetry Stream",
+      "direction": "host_to_device",
+      "description": "Start periodic telemetry upload from configured signals.",
+      "target_in_axdr_l": "telemetry scheduler"
+    },
+    {
+      "id": 82,
+      "name": "stop_telemetry_stream",
+      "display_name": "Stop Telemetry Stream",
+      "direction": "host_to_device",
+      "description": "Stop periodic telemetry upload.",
+      "target_in_axdr_l": "telemetry scheduler"
+    },
+    {
+      "id": 96,
+      "name": "request_fault_status",
+      "display_name": "Request Fault Status",
+      "direction": "host_to_device",
+      "description": "Request the current AxDr_L fault word.",
+      "target_in_axdr_l": "pm.fault.all"
+    },
+    {
+      "id": 97,
+      "name": "inject_mock_fault",
+      "display_name": "Inject Mock Fault",
+      "direction": "mock_only",
+      "description": "MockBackend-only command for validating fault UI paths.",
+      "target_in_axdr_l": "not for real firmware"
+    }
+  ]
+}
