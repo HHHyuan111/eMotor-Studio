@@ -89,3 +89,92 @@ class MotorCommand:
     name: str
     payload: dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time)
+
+
+@dataclass(frozen=True)
+class ExperimentTask:
+    name: str
+    title: str
+    target: str
+    duration_s: float
+    sample_rate_hz: float
+    parameters: dict[str, float | int | str | bool] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ExperimentTrace:
+    time_s: tuple[float, ...]
+    target: tuple[float, ...]
+    response: tuple[float, ...]
+    unit: str = ""
+
+
+@dataclass(frozen=True)
+class StepResponseMetrics:
+    initial_value: float
+    final_value: float
+    target_value: float
+    rise_time_s: float | None
+    settling_time_s: float | None
+    overshoot_percent: float
+    steady_state_error: float
+
+
+@dataclass(frozen=True)
+class ExperimentResult:
+    task: ExperimentTask
+    trace: ExperimentTrace
+    metrics: StepResponseMetrics
+    summary: str
+    generated_at: float = field(default_factory=time)
+
+
+@dataclass(frozen=True)
+class IdentificationTask:
+    name: str
+    title: str
+    module: str
+    duration_s: float
+    sample_rate_hz: float
+    signals: tuple[str, ...]
+    safety_limits: dict[str, float | int | str | bool] = field(default_factory=dict)
+    parameters: dict[str, float | int | str | bool] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class IdentificationEstimate:
+    key: str
+    value: float | int | str
+    unit: str = ""
+    confidence: float | None = None
+    status: str = "suggested"
+    description: str = ""
+
+
+@dataclass(frozen=True)
+class IdentificationTrace:
+    time_s: tuple[float, ...]
+    channels: dict[str, tuple[float, ...]]
+    units: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class IdentificationResult:
+    task: IdentificationTask
+    trace: IdentificationTrace
+    estimates: tuple[IdentificationEstimate, ...]
+    summary: str
+    generated_at: float = field(default_factory=time)
+
+
+@dataclass(frozen=True)
+class CurrentLoopPiSuggestion:
+    axis: str
+    kp: float
+    ki: float
+    target_bandwidth_hz: float
+    resistance_ohm: float
+    inductance_h: float
+    unit_kp: str = "V/A"
+    unit_ki: str = "V/(A*s)"
+    note: str = ""
