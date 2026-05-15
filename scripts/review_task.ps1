@@ -22,6 +22,10 @@ Step "Pytest"
 python -m pytest
 if ($LASTEXITCODE -ne 0) { $failed = $true }
 
+Step "GUI smoke"
+python scripts\gui_smoke_test.py
+if ($LASTEXITCODE -ne 0) { $failed = $true }
+
 Step "Required docs"
 if (Test-Path "docs\code_provenance.md") {
     Write-Host "OK: docs\code_provenance.md"

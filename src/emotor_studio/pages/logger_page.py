@@ -35,6 +35,8 @@ class LoggerPage(QtWidgets.QWidget):
         self.record_card = KpiCard("记录状态", "当前采样开关", "ok")
         self.count_card = KpiCard("样本数量", "已记录样本", "idle")
         self.path_card = KpiCard("导出路径", "最近一次导出", "idle")
+        for card in [self.record_card, self.count_card, self.path_card]:
+            card.setMaximumHeight(108)
         status_row.addWidget(self.record_card)
         status_row.addWidget(self.count_card)
         status_row.addWidget(self.path_card, 2)
@@ -64,7 +66,7 @@ class LoggerPage(QtWidgets.QWidget):
         self.table.setHorizontalHeaderLabels(columns)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setAlternatingRowColors(True)
-        self.table.verticalHeader().setDefaultSectionSize(28)
+        self.table.verticalHeader().setDefaultSectionSize(32)
         table_card.body.addWidget(self.table)
         layout.addWidget(table_card, 1)
         self._update_cards("-")

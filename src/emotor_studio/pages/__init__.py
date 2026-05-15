@@ -21,6 +21,7 @@ from .vesc_like_pages import (
     ObserverWorkbenchPage,
     ResearchWorkbenchPage,
     SampledDataPage,
+    SystemToolsPage,
     TerminalPage,
 )
 
@@ -45,5 +46,6 @@ __all__ = [
     "ResearchWorkbenchPage",
     "SampledDataPage",
     "ScopePage",
+    "SystemToolsPage",
     "TerminalPage",
 ]

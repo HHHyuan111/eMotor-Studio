@@ -19,7 +19,7 @@ class HardwarePage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("连接", "AxDr_L 通信入口。当前仍为 Mock 模式，真实连接将在协议确认后启用。"))
+        layout.addWidget(PageHeader("硬件连接", "AxDr_L 通信入口。当前仍为 Mock 模式。"))
 
         summary = SectionCard("当前路线", "V1.1 串口优先，CAN 和 J-Link/RTT 作为后续扩展或调试辅助。")
         route_layout = QtWidgets.QGridLayout()
@@ -34,6 +34,7 @@ class HardwarePage(QtWidgets.QWidget):
         ]:
             card = KpiCard(title, unit, state)
             card.set_value(value, unit, state)
+            card.setMaximumHeight(108)
             index = route_layout.count()
             route_layout.addWidget(card, index // 3, index % 3)
         summary.body.addLayout(route_layout)
@@ -48,11 +49,7 @@ class HardwarePage(QtWidgets.QWidget):
         layout.addWidget(tabs, 1)
 
         layout.addWidget(
-            InfoBox(
-                "本阶段边界",
-                "这里先做连接页框架和通信方式选择外壳，不扫描端口、不打开串口、不执行 PING。"
-                "Phase 7.2-A 之后再把 SerialBackend 最小握手接入同一页面。",
-            )
+            InfoBox("本阶段边界", "当前不扫描端口、不打开串口、不执行 PING。Phase 7.2-A 后接入最小握手。")
         )
 
     def _serial_tab(self) -> QtWidgets.QWidget:
@@ -61,7 +58,7 @@ class HardwarePage(QtWidgets.QWidget):
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(12)
 
-        panel = SectionCard("(USB-)Serial", "Type-C COM 优先；若 Type-C 只供电，则使用 J1 UART + 3.3V USB-TTL。")
+        panel = SectionCard("串口 / USB CDC", "Type-C COM 优先；J1 UART + USB-TTL 作为备选。")
         row = QtWidgets.QGridLayout()
         row.setHorizontalSpacing(8)
         row.setVerticalSpacing(8)

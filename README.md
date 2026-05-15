@@ -23,6 +23,16 @@ It is not a simple serial assistant and not a PySide demo. The long-term goal is
 - Phase 9.9: UI direction cleanup started with calmer blue-gray palette, simplified navigation and reduced duplicate global controls.
 - Phase 10.0: dashboard and scope polished with compact motor-status judgement, richer realtime metrics, scope presets and signal search.
 - Phase 10.1: parameter page and tuning workflow polished with summary cards, writable filtering and visible tuning progress.
+- Phase 10.2: premium UI system pass added calmer graphite/light workspace palette, refined cards, tables, status chips and oscilloscope colors.
+- Phase 10.3: information architecture cleanup reduced duplicated global actions, reordered navigation and shortened repetitive page copy.
+- Phase 10.4: unified workbench layout removed the secondary global toolbar, reduced top-level navigation and improved Scope X-axis mouse interaction.
+- Phase 10.5: Scope history and interaction polish separated long cached history from the visible time window and improved X-axis zoom behavior.
+- Phase 10.6: Scope professionalization added A/B cursor measurement, selected-channel readout table and current-view CSV export.
+- Phase 10.7: Scope unified measurement made A/B cursors, readout and current-view export available on fixed realtime tabs as well as custom channels.
+- Phase 10.8: Scope interaction polish added draggable snapping A/B cursors, measurement-row curve highlight and shorter workbench navigation labels.
+- Phase 10.9: system framework audit kept the sidebar compact and turned System Tools into a real low-frequency page container.
+- Phase 10.10: release-freeze check upgraded GUI smoke to traverse all pages and included it in the review script.
+- Phase 10.11: visual cohesion pass refined the palette, spacing, cards, buttons, tabs, tables, scrollbars and window sizing.
 - Current backend: MockBackend.
 - AxDr_L-aligned configs: `signals`, `parameters`, `commands`, `faults`.
 - Real hardware communication is not implemented yet.

@@ -10,7 +10,7 @@ class PageHeader(QtWidgets.QWidget):
         super().__init__(parent)
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(2)
+        layout.setSpacing(5)
         title_label = QtWidgets.QLabel(title)
         title_label.setObjectName("pageTitle")
         layout.addWidget(title_label)
@@ -33,7 +33,7 @@ class PageScrollArea(QtWidgets.QScrollArea):
         self.setObjectName("pageScrollArea")
         self.setWidgetResizable(True)
         self.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        page.setMinimumWidth(1060)
+        page.setMinimumWidth(980)
         self.setWidget(page)
 
 
@@ -47,7 +47,7 @@ class SectionCard(QtWidgets.QFrame):
         super().__init__(parent)
         self.setObjectName("sectionCard")
         self.body = QtWidgets.QVBoxLayout(self)
-        self.body.setContentsMargins(14, 12, 14, 14)
+        self.body.setContentsMargins(15, 13, 15, 15)
         self.body.setSpacing(10)
         title_label = QtWidgets.QLabel(title)
         title_label.setObjectName("sectionTitle")
@@ -70,9 +70,9 @@ class KpiCard(QtWidgets.QFrame):
         super().__init__(parent)
         self.setObjectName("kpiCard")
         self.setProperty("state", state)
-        self.setMinimumHeight(76)
+        self.setMinimumHeight(82)
         layout = QtWidgets.QVBoxLayout(self)
-        layout.setContentsMargins(10, 7, 10, 7)
+        layout.setContentsMargins(12, 10, 12, 10)
         layout.setSpacing(2)
         self.title_label = QtWidgets.QLabel(title)
         self.title_label.setObjectName("kpiTitle")
@@ -100,6 +100,7 @@ class StatusChip(QtWidgets.QLabel):
     def __init__(self, text: str, state: str = "muted", parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(text, parent)
         self.setProperty("role", "statusChip")
+        self.setMinimumHeight(29)
         self.set_state(state)
 
     def set_state(self, state: str) -> None:
@@ -113,8 +114,8 @@ class InfoBox(QtWidgets.QFrame):
         super().__init__(parent)
         self.setObjectName("infoBox")
         layout = QtWidgets.QVBoxLayout(self)
-        layout.setContentsMargins(12, 10, 12, 10)
-        layout.setSpacing(4)
+        layout.setContentsMargins(13, 10, 13, 10)
+        layout.setSpacing(6)
         title_label = QtWidgets.QLabel(title)
         title_label.setObjectName("infoTitle")
         body_label = QtWidgets.QLabel(body)
@@ -142,7 +143,7 @@ class ToolStripButton(QtWidgets.QToolButton):
         self.setCheckable(checkable)
         self.setEnabled(enabled)
         self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextOnly)
-        self.setMinimumWidth(78)
+        self.setMinimumWidth(88)
 
 
 class CommandStrip(QtWidgets.QFrame):

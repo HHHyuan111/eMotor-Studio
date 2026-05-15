@@ -29,9 +29,10 @@ from emotor_studio.pages import (
     ResearchWorkbenchPage,
     SampledDataPage,
     ScopePage,
+    SystemToolsPage,
     TerminalPage,
 )
-from emotor_studio.ui.components import PageScrollArea, StatusChip, ToolStripButton
+from emotor_studio.ui.components import PageScrollArea, StatusChip
 from emotor_studio.ui.theme import APP_STYLE
 
 
@@ -43,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.setWindowTitle("eMotor-Studio")
         self.resize(1600, 940)
-        self.setMinimumSize(1180, 760)
+        self.setMinimumSize(1120, 740)
         self.backend = backend or MockBackend()
         self.backend.add_telemetry_callback(self._emit_telemetry)
         self.backend.add_fault_callback(self._emit_fault)
@@ -89,10 +90,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def _build_sidebar(self) -> QtWidgets.QWidget:
         sidebar = QtWidgets.QWidget()
         sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(238)
+        sidebar.setFixedWidth(244)
         sidebar_layout = QtWidgets.QVBoxLayout(sidebar)
-        sidebar_layout.setContentsMargins(14, 14, 14, 14)
-        sidebar_layout.setSpacing(6)
+        sidebar_layout.setContentsMargins(16, 16, 16, 16)
+        sidebar_layout.setSpacing(7)
 
         title = QtWidgets.QLabel("eMotor-Studio")
         title.setObjectName("appTitle")
@@ -104,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.nav = QtWidgets.QListWidget()
         self.nav.setObjectName("navList")
-        self.nav.setFixedWidth(210)
+        self.nav.setFixedWidth(212)
         sidebar_layout.addWidget(self.nav, 5)
 
         device_title = QtWidgets.QLabel("当前目标")
@@ -113,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.device_list = QtWidgets.QListWidget()
         self.device_list.setObjectName("deviceList")
         self.device_list.addItems(["Mock 仿真", "AxDr_L 硬件待接入"])
-        self.device_list.setFixedHeight(58)
+        self.device_list.setFixedHeight(62)
         sidebar_layout.addWidget(self.device_list)
         scan_button = QtWidgets.QPushButton("硬件扫描（待实现）")
         scan_button.setEnabled(False)
@@ -139,10 +140,10 @@ class MainWindow(QtWidgets.QMainWindow):
         top_bar.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         top_content = QtWidgets.QWidget()
         top_bar.setWidget(top_content)
-        top_bar.setFixedHeight(48)
+        top_bar.setFixedHeight(52)
         status_row = QtWidgets.QHBoxLayout(top_content)
-        status_row.setContentsMargins(16, 9, 16, 9)
-        status_row.setSpacing(8)
+        status_row.setContentsMargins(18, 10, 18, 10)
+        status_row.setSpacing(9)
         self.backend_label = StatusChip("当前后端：Mock")
         self.connection_label = StatusChip("连接状态：已连接", "ok")
         self.mode_label = StatusChip("运行状态：--")
@@ -160,8 +161,6 @@ class MainWindow(QtWidgets.QMainWindow):
             status_row.addWidget(widget)
         status_row.addStretch(1)
         workspace_layout.addWidget(top_bar)
-
-        workspace_layout.addWidget(self._wrap_horizontal_bar(self._build_workbench_toolbar(), 48))
 
         self.stack = QtWidgets.QStackedWidget()
         workspace_layout.addWidget(self.stack, 1)
@@ -187,75 +186,45 @@ class MainWindow(QtWidgets.QMainWindow):
         self.logger_page = LoggerPage(self.backend.read_signal_schema())
         self.report_page = ReportPage(self.logger_page.samples)
         self.terminal_page = TerminalPage()
+        self.system_tools_page = SystemToolsPage(
+            [
+                ("电机设置", self.motor_settings_page),
+                ("FOC", self.foc_page),
+                ("滤波 / 陷波", self.filter_design_page),
+                ("应用设置", self.app_settings_page),
+                ("观测器", self.observer_page),
+                ("数据分析", self.data_analysis_page),
+                ("固件", self.firmware_page),
+                ("Terminal", self.terminal_page),
+            ]
+        )
 
         self._add_nav_group("总览")
         self._add_page("仪表盘", self.dashboard_page)
-        self._add_page("硬件连接", self.hardware_page)
+        self._add_page("连接", self.hardware_page)
         self._add_nav_group("实时调试")
-        self._add_page("实时波形", self.scope_page)
-        self._add_page("控制命令", self.command_page)
-        self._add_page("参数配置", self.parameter_page)
-        self._add_nav_group("控制算法")
-        self._add_page("三环调参", self.control_tuning_page)
-        self._add_page("滤波 / 陷波", self.filter_design_page)
-        self._add_page("FOC 配置", self.foc_page)
-        self._add_page("应用设置", self.app_settings_page)
-        self._add_nav_group("实验与辨识")
-        self._add_page("实验工作台", self.research_page)
-        self._add_page("自动分析", self.experiment_page)
-        self._add_page("参数辨识", self.identification_page)
-        self._add_page("观测器", self.observer_page)
-        self._add_page("电机参数", self.motor_settings_page)
-        self._add_nav_group("数据与诊断")
-        self._add_page("采样数据", self.sampled_data_page)
-        self._add_page("故障诊断", self.fault_page)
-        self._add_page("数据记录", self.logger_page)
-        self._add_page("调试报告", self.report_page)
-        self._add_page("数据分析", self.data_analysis_page)
-        self._add_nav_group("开发工具")
-        self._add_page("固件信息", self.firmware_page)
-        self._add_page("Terminal", self.terminal_page)
+        self._add_page("波形", self.scope_page)
+        self._add_page("采样", self.sampled_data_page)
+        self._add_page("记录", self.logger_page)
+        self._add_nav_group("控制调参")
+        self._add_page("命令", self.command_page)
+        self._add_page("参数", self.parameter_page)
+        self._add_page("三环", self.control_tuning_page)
+        self._add_nav_group("科研工程")
+        self._add_page("实验", self.research_page)
+        self._add_page("分析", self.experiment_page)
+        self._add_page("辨识", self.identification_page)
+        self._add_nav_group("诊断输出")
+        self._add_page("故障", self.fault_page)
+        self._add_page("报告", self.report_page)
+        self._add_nav_group("系统")
+        self._add_page("工具", self.system_tools_page)
 
         self.nav.currentRowChanged.connect(self._on_nav_changed)
         first_page_row = self._first_page_row()
         self.nav.setCurrentRow(first_page_row)
         self._on_nav_changed(first_page_row)
         return workspace
-
-    def _wrap_horizontal_bar(self, widget: QtWidgets.QWidget, height: int) -> QtWidgets.QScrollArea:
-        scroll = QtWidgets.QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
-        scroll.setFixedHeight(height)
-        scroll.setWidget(widget)
-        return scroll
-
-    def _build_workbench_toolbar(self) -> QtWidgets.QWidget:
-        toolbar = QtWidgets.QWidget()
-        toolbar.setObjectName("workbenchToolBar")
-        layout = QtWidgets.QHBoxLayout(toolbar)
-        layout.setContentsMargins(16, 8, 16, 8)
-        layout.setSpacing(6)
-        actions = [
-            ("连接", "真实硬件连接在 Phase 7.2 之后启用", False, False),
-            ("断开", "断开真实硬件连接，当前 Mock 模式无动作", False, False),
-            ("读取配置", "后续读取 AxDr_L 参数配置", False, False),
-            ("写入配置", "后续写入 AxDr_L 参数配置", False, False),
-            ("实时数据", "当前由 MockBackend 刷新实时数据", True, True),
-            ("导出会话", "当前请在实验/调参页面导出具体会话包", False, False),
-        ]
-        for text, tooltip, checkable, enabled in actions:
-            button = ToolStripButton(text, tooltip, checkable=checkable, enabled=enabled)
-            if text == "实时数据":
-                button.setChecked(True)
-            layout.addWidget(button)
-        layout.addStretch(1)
-        hint = QtWidgets.QLabel("全局工具栏：真实连接/写入后续启用，当前只保留状态与入口")
-        hint.setObjectName("hintText")
-        layout.addWidget(hint)
-        return toolbar
 
     def _add_nav_group(self, title: str) -> None:
         item = QtWidgets.QListWidgetItem(title)

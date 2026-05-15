@@ -33,6 +33,8 @@ class ReportPage(QtWidgets.QWidget):
         top = QtWidgets.QHBoxLayout()
         self.sample_card = KpiCard("报告样本", "当前 Logger 样本数", "idle")
         self.path_card = KpiCard("最近报告", "Markdown 路径", "idle")
+        self.sample_card.setMaximumHeight(108)
+        self.path_card.setMaximumHeight(108)
         top.addWidget(self.sample_card)
         top.addWidget(self.path_card, 2)
         top.addWidget(InfoBox("报告说明", "报告内容保持 Markdown，便于复制到课程文档、故障记录或后续知识库。"), 2)

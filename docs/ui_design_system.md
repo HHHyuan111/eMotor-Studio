@@ -1,22 +1,32 @@
 # eMotor-Studio UI Design System
 
-Date: 2026-05-14
+Date: 2026-05-15
 
 ## Layout
 
 - 左侧固定导航：按“实时监控 / 控制调试 / 数据诊断”组织页面。
 - 顶部工程状态栏：显示后端、连接状态、运行状态、故障状态、通信策略和会话信息。
-- 主工作区：统一 16px padding，页面以 PageHeader 开始，内容使用 SectionCard 分区。
+- 主工作区：统一 18px 左右的视觉节奏，页面以 PageHeader 开始，内容使用 SectionCard 分区。
 
 ## Colors
 
-- 主背景：浅灰蓝工作区，降低长时间调试疲劳。
-- 导航：深色侧栏，突出当前页面。
-- 卡片：白色背景 + 细边框。
-- 主按钮：蓝色。
-- 危险按钮：红色。
+- 主背景：低饱和浅灰蓝工作区，降低长时间调试疲劳。
+- 导航：石墨深色侧栏，突出当前页面和工作台结构。
+- 卡片：近白背景 + 柔和边框 + 更统一的圆角。
+- 主按钮：低饱和青蓝色，避免页面出现过多高饱和色块。
+- 危险按钮：深红色，只用于故障注入、停止等高风险动作。
 - 状态：绿色运行/正常，蓝色空闲，灰色停止，红色故障，黄色警告。
-- Scope：深色曲线背景，增强实时波形对比度。
+- Scope：深色曲线背景，曲线采用蓝、琥珀、青绿、柔紫等低饱和高可读色。
+
+## Phase 10.2 Visual Tokens
+
+- `window`: outer application background.
+- `workspace`: main engineering work area.
+- `sidebar`: persistent navigation frame.
+- `card` / `card_soft`: normal and soft surfaces.
+- `primary`: main action accent.
+- `ok` / `idle` / `stop` / `fault` / `warning`: semantic status colors.
+- `scope_bg`: oscilloscope plotting surface.
 
 ## Components
 

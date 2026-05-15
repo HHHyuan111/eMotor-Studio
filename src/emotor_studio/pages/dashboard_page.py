@@ -48,7 +48,8 @@ class DashboardPage(QtWidgets.QWidget):
         ]
         for index, (key, title, unit) in enumerate(specs):
             widget = KpiCard(title, unit)
-            widget.setMinimumWidth(150)
+            widget.setMinimumWidth(160)
+            widget.setMaximumHeight(108)
             self._cards[key] = widget
             grid.addWidget(widget, index // 3, index % 3)
         card.body.addLayout(grid)
@@ -114,7 +115,8 @@ class DashboardPage(QtWidgets.QWidget):
         ]
         for index, (key, title, unit) in enumerate(metrics):
             widget = KpiCard(title, unit)
-            widget.setMinimumWidth(170)
+            widget.setMinimumWidth(174)
+            widget.setMaximumHeight(112)
             self._cards[key] = widget
             grid.addWidget(widget, index // 4, index % 4)
         card.body.addLayout(grid)

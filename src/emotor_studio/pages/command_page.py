@@ -22,14 +22,14 @@ class CommandPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("控制命令", "当前命令只发送到 MockBackend，用于验证上位机工作流。"))
+        layout.addWidget(PageHeader("控制命令", "当前命令只发送到 MockBackend。"))
 
         top = QtWidgets.QGridLayout()
         top.setHorizontalSpacing(12)
         top.setVerticalSpacing(12)
         layout.addLayout(top)
 
-        quick_card = SectionCard("常用命令", "危险等级清晰区分，避免后续真实硬件阶段误操作。")
+        quick_card = SectionCard("常用命令", "高风险动作使用独立颜色。")
         quick_row = QtWidgets.QHBoxLayout()
         quick_row.setSpacing(8)
         for label, command, variant in [
@@ -40,11 +40,12 @@ class CommandPage(QtWidgets.QWidget):
         ]:
             button = QtWidgets.QPushButton(label)
             button.setProperty("variant", variant)
+            button.setMinimumWidth(96)
             button.clicked.connect(lambda _checked=False, name=command: self._send(name))
             quick_row.addWidget(button)
         quick_row.addStretch(1)
         quick_card.body.addLayout(quick_row)
-        quick_card.body.addWidget(InfoBox("模式提示", "当前为 Mock 模式，不会控制真实电机。真实硬件使能将在 Phase 7.2 之后逐步接入。"))
+        quick_card.body.addWidget(InfoBox("模式提示", "当前为 Mock 模式，不会控制真实电机。"))
         top.addWidget(quick_card, 0, 0)
 
         setpoint_card = SectionCard("目标设定")
@@ -76,7 +77,7 @@ class CommandPage(QtWidgets.QWidget):
         setpoint_card.body.addLayout(setpoint_grid)
         top.addWidget(setpoint_card, 0, 1)
 
-        custom_card = SectionCard("自定义命令", "来自 configs/commands.json 的命令结构。")
+        custom_card = SectionCard("自定义命令", "命令结构来自 configs/commands.json。")
         custom_layout = QtWidgets.QVBoxLayout()
         self.command_combo = QtWidgets.QComboBox()
         for command in self._command_schema:
@@ -103,10 +104,10 @@ class CommandPage(QtWidgets.QWidget):
         self.history.setHorizontalHeaderLabels(["时间", "命令", "参数", "结果"])
         self.history.horizontalHeader().setStretchLastSection(True)
         self.history.setAlternatingRowColors(True)
-        self.history.verticalHeader().setDefaultSectionSize(30)
-        self.history.setColumnWidth(0, 120)
-        self.history.setColumnWidth(1, 180)
-        self.history.setColumnWidth(2, 420)
+        self.history.verticalHeader().setDefaultSectionSize(32)
+        self.history.setColumnWidth(0, 132)
+        self.history.setColumnWidth(1, 190)
+        self.history.setColumnWidth(2, 460)
         history_card.body.addWidget(self.history)
         layout.addWidget(history_card, 1)
         self._rebuild_payload_form()

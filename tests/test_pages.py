@@ -5,6 +5,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6 import QtWidgets
 
 from emotor_studio.backend import MockBackend
+from emotor_studio.ui.main_window import MainWindow
 from emotor_studio.pages import (
     CommandPage,
     ControlTuningPage,
@@ -19,6 +20,41 @@ from emotor_studio.pages import (
 
 def _app() -> QtWidgets.QApplication:
     return QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+
+
+def test_main_window_keeps_compact_navigation_and_system_tools_tabs() -> None:
+    _app()
+    window = MainWindow()
+    try:
+        nav_titles = [
+            window.nav.item(index).text().strip()
+            for index in range(window.nav.count())
+            if window.nav.item(index).data(0x0100) is not None
+        ]
+
+        assert nav_titles == [
+            "仪表盘",
+            "连接",
+            "波形",
+            "采样",
+            "记录",
+            "命令",
+            "参数",
+            "三环",
+            "实验",
+            "分析",
+            "辨识",
+            "故障",
+            "报告",
+            "工具",
+        ]
+
+        tabs = window.system_tools_page.findChild(QtWidgets.QTabWidget)
+        assert tabs is not None
+        assert tabs.count() == 8
+        assert {tabs.tabText(index) for index in range(tabs.count())} >= {"FOC", "固件", "Terminal"}
+    finally:
+        window.close()
 
 
 def test_scope_page_builds_axdr_l_channels() -> None:
@@ -51,6 +87,116 @@ def test_scope_page_applies_presets_and_filters_channels() -> None:
     ]
     assert visible
     assert all("母线" in label or "bus" in label.lower() for label in visible)
+
+
+def test_scope_page_keeps_long_history_separate_from_view_window() -> None:
+    _app()
+    backend = MockBackend()
+    page = ScopePage(backend.read_signal_schema())
+    backend.start()
+
+    for _index in range(900):
+        page.update_telemetry(backend.tick(0.05))
+
+    assert len(page._time) == 900
+    assert page._max_samples >= 6000
+
+    page._zoom_current_x(0.5)
+
+    assert len(page._time) == 900
+    assert page.time_window.value() < 30.0
+
+
+def test_scope_page_cursor_measurement_and_view_export(tmp_path) -> None:
+    _app()
+    backend = MockBackend()
+    page = ScopePage(backend.read_signal_schema())
+    backend.start()
+
+    for _index in range(120):
+        page.update_telemetry(backend.tick(0.05))
+
+    page._update_cursor_readout(1.0)
+    page._set_cursor_a_from_current()
+    page._update_cursor_readout(3.0)
+    page._set_cursor_b_from_current()
+
+    assert page.measure_table.rowCount() > 0
+    assert "Δt：" in page.cursor_delta_label.text()
+
+    times = list(page._time)
+    left = times[len(times) // 3]
+    right = times[len(times) // 2]
+    page._set_all_x_ranges(left, right)
+    export_path = page.export_view_csv(tmp_path / "scope_view.csv")
+    lines = export_path.read_text(encoding="utf-8").splitlines()
+
+    assert lines[0].startswith("time_s,")
+    assert 1 < len(lines) < len(page._time)
+
+
+def test_scope_page_fixed_tabs_share_cursor_measurement_and_view_export(tmp_path) -> None:
+    _app()
+    backend = MockBackend()
+    page = ScopePage(backend.read_signal_schema())
+    backend.start()
+
+    for _index in range(160):
+        page.update_telemetry(backend.tick(0.05))
+
+    page.tabs.setCurrentIndex(0)
+    assert "phase_current_a" in page._active_measure_channels()
+
+    page._current_cursor_index = 20
+    page._set_cursor_a_from_current()
+    page._current_cursor_index = 80
+    page._set_cursor_b_from_current()
+
+    assert page.measure_table.rowCount() > 0
+    assert page.measure_table.item(0, 0).text() in {"A相电流", "B相电流", "C相电流", "q轴电流", "d轴电流"}
+    active_plot = page._active_plot()
+    assert page._plot_cursor_lines[active_plot]["a"].isVisible()
+    assert page._plot_cursor_lines[active_plot]["b"].isVisible()
+
+    times = list(page._time)
+    page._set_all_x_ranges(times[10], times[90])
+    export_path = page.export_view_csv(tmp_path / "scope_current_view.csv")
+    header = export_path.read_text(encoding="utf-8").splitlines()[0]
+
+    assert "phase_current_a" in header
+    assert "current_q" in header
+
+
+def test_scope_page_dragged_cursor_snaps_to_sample_and_highlights_channel() -> None:
+    _app()
+    backend = MockBackend()
+    page = ScopePage(backend.read_signal_schema())
+    backend.start()
+
+    for _index in range(120):
+        page.update_telemetry(backend.tick(0.05))
+
+    page.tabs.setCurrentIndex(0)
+    active_plot = page._active_plot()
+    line = page._plot_cursor_lines[active_plot]["a"]
+    times = list(page._time)
+    line.setPos(times[35] + (times[36] - times[35]) * 0.25)
+    page._snap_dragged_cursor("a", line)
+
+    assert page._cursor_a_index == 35
+    assert "A：" in page.cursor_a_label.text()
+
+    page.measure_table.selectRow(0)
+    highlighted = page._highlighted_channel
+
+    assert highlighted in page._active_measure_channels()
+    assert "高亮：" in page.highlight_label.text()
+
+    page._clear_cursors()
+
+    assert page._cursor_a_index is None
+    assert page._cursor_b_index is None
+    assert not page._plot_cursor_lines[active_plot]["a"].isVisible()
 
 
 def test_parameter_page_writes_selected_value() -> None:

@@ -78,7 +78,7 @@ class PlaceholderWorkbenchPage(QtWidgets.QWidget):
         layout.setSpacing(12)
         layout.addWidget(PageHeader(title, subtitle))
 
-        overview = SectionCard("页面总览", "先搭建与 VESC Tool 类似的工程页结构，后续逐步接入 AxDr_L 协议。")
+        overview = SectionCard("页面总览", "当前以框架和字段为主，真实硬件动作后续接入。")
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
         for index, (card_title, value, unit, state) in enumerate(cards):
@@ -104,7 +104,7 @@ class PlaceholderWorkbenchPage(QtWidgets.QWidget):
         layout.addWidget(
             InfoBox(
                 "实现边界",
-                "本页当前只提供框架、字段和操作入口。真实读写、识别、升级和硬件动作将在协议确认后接入。",
+                "本页只提供工作流入口。真实读写、识别、升级和硬件动作将在协议确认后接入。",
             )
         )
         layout.addStretch(1)
@@ -410,13 +410,13 @@ class ControlTuningPage(QtWidgets.QWidget):
         self.pi_validation_plot.plot(
             result.trace.time_s,
             result.trace.target,
-            pen=pg.mkPen("#fbbf24", width=2.0),
+            pen=pg.mkPen("#E7B75F", width=2.0),
             name="目标 Iq",
         )
         self.pi_validation_plot.plot(
             result.trace.time_s,
             result.trace.response,
-            pen=pg.mkPen("#22d3ee", width=2.2),
+            pen=pg.mkPen("#61A5FA", width=2.2),
             name="验证响应",
         )
         self.pi_validation_plot.enableAutoRange()
@@ -526,6 +526,54 @@ class TerminalPage(QtWidgets.QWidget):
         layout.addLayout(row)
 
 
+class SystemToolsPage(QtWidgets.QWidget):
+    """Aggregated low-frequency system and developer tools."""
+
+    def __init__(
+        self,
+        tool_pages: list[tuple[str, QtWidgets.QWidget]] | None = None,
+        parent: QtWidgets.QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(12)
+        layout.addWidget(PageHeader("系统工具", "低频配置、固件、终端和开发者工具统一收纳。"))
+
+        if tool_pages:
+            tabs = QtWidgets.QTabWidget()
+            tabs.setTabShape(QtWidgets.QTabWidget.TabShape.Triangular)
+            for title, page in tool_pages:
+                tabs.addTab(page, title)
+            layout.addWidget(tabs, 1)
+            layout.addWidget(
+                InfoBox(
+                    "收纳原则",
+                    "左侧导航只保留高频工作流入口，低频工具集中到这里，避免主工作台过长和重复。",
+                )
+            )
+            return
+
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(12)
+        cards = [
+            WorkflowCard("FOC 配置", "FOC", ["相序、电角度、SVPWM、采样链路", "后续接入向导和校准流程"], ["预留"]),
+            WorkflowCard("应用设置", "App", ["控制模式、输入源、安全策略", "后续对齐 AxDr_L 应用层状态机"], ["预留"]),
+            WorkflowCard("固件信息", "Firmware", ["版本、构建、协议兼容性", "后续读取固件信息和升级入口"], ["预留"]),
+            WorkflowCard("Terminal", "Console", ["协议调试、日志、开发命令", "后续接入串口终端和 RTT 辅助"], ["预留"]),
+        ]
+        for index, card in enumerate(cards):
+            grid.addWidget(card, index // 2, index % 2)
+        layout.addLayout(grid)
+        layout.addWidget(
+            InfoBox(
+                "收纳原则",
+                "左侧导航只保留高频工作流入口，低频工具集中到这里，避免主工作台过长和重复。",
+            )
+        )
+        layout.addStretch(1)
+
+
 class SampledDataPage(QtWidgets.QWidget):
     """Triggered sampling framework similar to VESC Tool Sampled Data."""
 
@@ -626,7 +674,7 @@ class SampledDataPage(QtWidgets.QWidget):
         plot.getPlotItem().hideButtons()
         plot.setMenuEnabled(False)
         x_values = [index * 0.001 for index in range(500)]
-        for offset, color in [(0.0, "#22d3ee"), (2.0, "#fbbf24"), (4.0, "#a78bfa")]:
+        for offset, color in [(0.0, "#61A5FA"), (2.0, "#E7B75F"), (4.0, "#9D8DF1")]:
             y_values = [math.sin(index * 0.05 + offset) for index in range(500)]
             plot.plot(x_values, y_values, pen=pg.mkPen(color, width=2.0))
         return plot
@@ -660,7 +708,7 @@ class ResearchWorkbenchPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("实验工作台", "面向教学演示和论文实验的数据生成入口。"))
+        layout.addWidget(PageHeader("科研实验", "面向教学演示、论文实验和工程验证的任务入口。"))
 
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(12)
@@ -687,7 +735,7 @@ class ResearchWorkbenchPage(QtWidgets.QWidget):
             steps.addWidget(card)
         pipeline.body.addLayout(steps)
         layout.addWidget(pipeline)
-        layout.addWidget(InfoBox("当前边界", "开发板不在身边时，先把实验任务结构、导出路径和报告入口设计好；真实执行等协议和硬件接入。"))
+        layout.addWidget(InfoBox("当前边界", "本页先定义实验任务、导出路径和报告入口；真实执行等协议和硬件接入。"))
         layout.addStretch(1)
 
 
@@ -700,9 +748,9 @@ class ExperimentAnalysisPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("自动分析", "把实验数据转为可复现指标、图表和 Markdown 报告。"))
+        layout.addWidget(PageHeader("数据分析", "把实验数据转为指标、图表和 Markdown 报告。"))
 
-        setup = SectionCard("Mock 电流环阶跃实验", "当前不连接真实硬件。这里先跑通任务生成、数据分析、图表和报告入口。")
+        setup = SectionCard("Mock 电流环阶跃实验", "用于验证数据分析、图表和报告链路。")
         setup_grid = QtWidgets.QGridLayout()
         setup_grid.setHorizontalSpacing(10)
         setup_grid.setVerticalSpacing(8)
@@ -813,13 +861,13 @@ class ExperimentAnalysisPage(QtWidgets.QWidget):
         self.response_plot.plot(
             result.trace.time_s,
             result.trace.target,
-            pen=pg.mkPen("#fbbf24", width=2.0),
+            pen=pg.mkPen("#E7B75F", width=2.0),
             name="目标 Iq",
         )
         self.response_plot.plot(
             result.trace.time_s,
             result.trace.response,
-            pen=pg.mkPen("#22d3ee", width=2.4),
+            pen=pg.mkPen("#61A5FA", width=2.4),
             name="反馈 Iq",
         )
         self.response_plot.enableAutoRange()
@@ -909,7 +957,7 @@ class ExperimentAnalysisPage(QtWidgets.QWidget):
         magnitude = [-10 * math.log10(1 + (x / 600) ** 2) for x in x_values]
         phase = [-math.degrees(math.atan(x / 600)) for x in x_values]
         plot.plot(x_values, magnitude, pen=pg.mkPen("#2dd4bf", width=2.2), name="Magnitude")
-        plot.plot(x_values, phase, pen=pg.mkPen("#fbbf24", width=2.0), name="Phase")
+        plot.plot(x_values, phase, pen=pg.mkPen("#E7B75F", width=2.0), name="Phase")
         return plot
 
 
@@ -925,9 +973,9 @@ class IdentificationPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("参数辨识", "按参数类型拆分辨识流程，每个模块都显示相关变量、拟合结果和安全边界。"))
+        layout.addWidget(PageHeader("参数辨识", "按参数类型拆分辨识流程，展示变量、拟合结果和安全边界。"))
 
-        overview = SectionCard("辨识工作流", "当前仍为 Mock/框架模式。真实激励、采样和参数写入必须等协议、安全限制和硬件联调完成后再启用。")
+        overview = SectionCard("辨识工作流", "真实激励、采样和写入必须等协议、安全限制和硬件联调完成后启用。")
         overview_grid = QtWidgets.QGridLayout()
         overview_grid.setSpacing(10)
         for index, (title, value, unit, state) in enumerate(
@@ -1159,8 +1207,8 @@ class IdentificationPage(QtWidgets.QWidget):
         x_values = [index * 0.002 for index in range(500)]
         if plot_kind == "step":
             series = [
-                ("电流反馈", [1.0 - math.exp(-index / 55.0) for index in range(500)], "#22d3ee"),
-                ("注入电压", [0.0 if index < 20 else 1.0 for index in range(500)], "#fbbf24"),
+                ("电流反馈", [1.0 - math.exp(-index / 55.0) for index in range(500)], "#61A5FA"),
+                ("注入电压", [0.0 if index < 20 else 1.0 for index in range(500)], "#E7B75F"),
             ]
         elif plot_kind == "current":
             series = [
@@ -1170,15 +1218,15 @@ class IdentificationPage(QtWidgets.QWidget):
             ]
         elif plot_kind == "angle":
             series = [
-                ("编码器角度", [math.sin(index * 0.025) for index in range(500)], "#fbbf24"),
-                ("估计角度", [math.sin(index * 0.025 + 0.08) for index in range(500)], "#22d3ee"),
-                ("角度误差", [0.08 * math.sin(index * 0.025) for index in range(500)], "#f87171"),
+                ("编码器角度", [math.sin(index * 0.025) for index in range(500)], "#E7B75F"),
+                ("估计角度", [math.sin(index * 0.025 + 0.08) for index in range(500)], "#61A5FA"),
+                ("角度误差", [0.08 * math.sin(index * 0.025) for index in range(500)], "#E58282"),
             ]
         else:
             series = [
-                ("速度", [1.0 - math.exp(-index / 90.0) + 0.04 * math.sin(index * 0.05) for index in range(500)], "#22d3ee"),
-                ("目标", [0.0 if index < 25 else 1.0 for index in range(500)], "#fbbf24"),
-                ("Iq", [0.4 * math.exp(-index / 180.0) for index in range(500)], "#a78bfa"),
+                ("速度", [1.0 - math.exp(-index / 90.0) + 0.04 * math.sin(index * 0.05) for index in range(500)], "#61A5FA"),
+                ("目标", [0.0 if index < 25 else 1.0 for index in range(500)], "#E7B75F"),
+                ("Iq", [0.4 * math.exp(-index / 180.0) for index in range(500)], "#9D8DF1"),
             ]
         for name, values, color in series:
             plot.plot(x_values, values, pen=pg.mkPen(color, width=2.0), name=name)
@@ -1215,7 +1263,7 @@ class IdentificationPage(QtWidgets.QWidget):
 
         plot = self.module_plots[module_key]
         plot.clear()
-        colors = ["#22d3ee", "#fbbf24", "#a78bfa", "#f87171"]
+        colors = ["#61A5FA", "#E7B75F", "#9D8DF1", "#E58282"]
         for index, (channel, values) in enumerate(result.trace.channels.items()):
             plot.plot(
                 result.trace.time_s,
@@ -1244,7 +1292,7 @@ class ObserverWorkbenchPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
-        layout.addWidget(PageHeader("观测器", "无感观测器、估计角度、编码器角度和误差分析窗口。"))
+        layout.addWidget(PageHeader("无感观测器", "估计角度、编码器角度和误差分析窗口。"))
 
         top = QtWidgets.QGridLayout()
         top.setSpacing(12)
